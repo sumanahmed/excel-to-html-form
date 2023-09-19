@@ -5,7 +5,7 @@
       <h3>Import XLSX</h3>
       <input type="file" @change="previewFiles" />
       <h3>Table </h3>
-      {{ parcels }}
+        {{ parcels }}
       <table border="1">
         <thead>
           <tr>
@@ -31,10 +31,14 @@
             </td>
             <td>
               <select v-model="parcel.thana_id" @change="changeThana(index, parcel.thana_id)">
-                <option v-for="item in thanaList" :key="item.id" :value="item.id">{{ item.text }} </option>
+                <option v-for="item in parcel.thanaList" :key="item.id" :value="item.id">{{ item.text }} </option>
               </select>
             </td>
-            <td>--</td>
+            <td>
+              <select v-model="parcel.area_id">
+                <option v-for="item in parcel.areaList" :key="item.id" :value="item.id">{{ item.text }} </option>
+              </select>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -59,6 +63,22 @@ export default {
         { id: 2, district_id: 1, text: 'Mohakhali'},
         { id: 3, district_id: 2, text: 'Chandina'},
         { id: 4, district_id: 2, text: 'Barura'}
+      ],
+      areas: [
+        { id: 1, thana_id: 1, text: 'Mirpur-10'},
+        { id: 2, thana_id: 1, text: 'Mirpur-11'},
+        { id: 3, thana_id: 1, text: 'Mirpur-6'},
+        { id: 4, thana_id: 1, text: 'Mirpur-12'},
+
+        { id: 5, thana_id: 2, text: 'DOHS'},
+        { id: 6, thana_id: 2, text: 'Chairman Bari'},
+        { id: 7, thana_id: 2, text: 'Kachabazar'},
+        { id: 8, thana_id: 2, text: 'Arjatpara'},
+
+        { id: 9, thana_id: 3, text: 'Barkait'},
+        { id: 10, thana_id: 3, text: 'Maijhkhar'},
+        { id: 11, thana_id: 3, text: 'Madhaiya'},
+        { id: 12, thana_id: 3, text: 'khusbash'}
       ],
       thanaList: [],
       areaList: []
@@ -96,10 +116,10 @@ export default {
               district_id: 0,
               thana_id: 0,
               area_id: 0,
+              thanaList: [],
+              areaList: []
             };
           });
-
-          console.log('parcels = ', this.parcels)
 
         }
 
@@ -107,12 +127,16 @@ export default {
       }
     },
     changeDistrict (index, districtId) {
-      this.thanaList = this.thanas.filter(item => item.district_id === districtId)
-      console.log('index = ', index, ' district_id = ', districtId)
+      const thanas = this.thanas.filter(item => item.district_id === districtId)
+      this.parcels[index].thanaList = thanas.length > 0 ? thanas : [];
+      this.parcels[index].thana_id = 0;
     },
     changeThana (index, thanaId) {
-      // this.thanaList = this.thanas.filter(item => item.district_id === districtId)
       console.log('index = ', index, ' thana id = ', thanaId)
+      const areas = this.areas.filter(item => item.thana_id === thanaId)
+      console.log(areas)
+      this.parcels[index].areaList = areas.length > 0 ? areas : [];
+      this.parcels[index].area_id = 0;
     }
   }
 };
